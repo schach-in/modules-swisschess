@@ -24,17 +24,7 @@
  * @todo Einzelturniere unterstützen
  */
 function mod_swisschess_make_swtimport($vars, $settings, $event) {
-	// parameter count correct?
-	if (count($vars) !== 2) {
-		wrap_log(sprintf('SWT-Import: Falsche Zahl von Parametern: %s', implode('/', $vars)));
-		return false;
-	}
-
-	// is there an event?
-	if (empty($event['event_id'])) {
-		wrap_log('SWT-Import: Kein Termin für diese Parameter in der Datenbank');
-		return false;
-	}
+	if (!$event) return false;
 
 	$page['breadcrumbs'][]['title'] = 'SWT-Import';
 	
