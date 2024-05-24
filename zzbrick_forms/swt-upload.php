@@ -63,7 +63,8 @@ foreach (array_keys($zz['fields']) as $no) {
 }
 
 $zz['vars']['event'] = $brick['data'];
-$zz['hooks']['after_upload'] = 'mf_swisschess_swtimport';
+$zz['hooks']['after_validation'][] = 'mf_swisschess_filematch_hook';
+$zz['hooks']['after_upload'][] = 'mf_swisschess_swtimport';
 
 wrap_text_set('Edit a record', '');
 wrap_text_set('Record was not updated (no changes were made)', 'Datei wurde hochgeladen');
