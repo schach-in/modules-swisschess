@@ -25,7 +25,7 @@
  * @todo Einzel- oder Mannschaftsturnier aus Termine auslesen
  * @todo Datenherkunft aus Turniere
  */
-function mod_tournaments_make_swtwriter($vars, $settings, $event) {
+function mod_swisschess_make_swtwriter($vars, $settings, $event) {
 	ignore_user_abort(1);
 	ini_set('max_execution_time', 120);
 
@@ -87,7 +87,7 @@ function mod_tournaments_make_swtwriter($vars, $settings, $event) {
 		$writer['deletions'] = 0;
 		foreach ($tournament['bin'] as $index => $token) {
 			if (in_array($token['content'], $to_delete)) {
-				$result = mod_tournaments_make_swtwriter_delete($handle, $token);
+				$result = mod_swisschess_make_swtwriter_delete($handle, $token);
 				if ($result) $writer['deletions']++;
 			}
 		}
@@ -98,17 +98,17 @@ function mod_tournaments_make_swtwriter($vars, $settings, $event) {
 			// 1046, 2038
 			if ($token['content'] == 1012) {
 				// 1012 MNr. Rangliste
-				$team_id = mod_tournaments_make_swtwriter_read_id($handle, $token, 'team_id', $event['event_id']);
+				$team_id = mod_swisschess_make_swtwriter_read_id($handle, $token, 'team_id', $event['event_id']);
 			} elseif ($token['content'] == 1046) {
 				// 1046 Team Info4
-				$result = mod_tournaments_make_swtwriter_write($handle, $token, 'team_id', $team_id);
+				$result = mod_swisschess_make_swtwriter_write($handle, $token, 'team_id', $team_id);
 				if ($result) $writer['changes_team_id']++;
 			} elseif ($token['content'] == 2020) {
 				// 2020 Spieler TNr.-ID hex
-				$person_id = mod_tournaments_make_swtwriter_read_id($handle, $token, 'person_id', $event['event_id']);
+				$person_id = mod_swisschess_make_swtwriter_read_id($handle, $token, 'person_id', $event['event_id']);
 			} elseif ($token['content'] == 2038) {
 				// 2038 Spieler Info4
-				$result = mod_tournaments_make_swtwriter_write($handle, $token, 'person_id', $person_id);
+				$result = mod_swisschess_make_swtwriter_write($handle, $token, 'person_id', $person_id);
 				if ($result) $writer['changes_person_id']++;
 			}
 		}
@@ -140,7 +140,7 @@ function mod_tournaments_make_swtwriter($vars, $settings, $event) {
  * @param int $event_id
  * @return int $id
  */
-function mod_tournaments_make_swtwriter_read_id($handle, $token, $field, $event_id) {
+function mod_swisschess_make_swtwriter_read_id($handle, $token, $field, $event_id) {
 	fseek($handle, $token['begin']);
 	$string = fread($handle, $token['end'] - $token['begin'] + 1);
 	switch ($field) {
@@ -170,7 +170,7 @@ function mod_tournaments_make_swtwriter_read_id($handle, $token, $field, $event_
  * @param int $id
  * @return bool true: something was written, false: nothing was written
  */
-function mod_tournaments_make_swtwriter_write($handle, $token, $field, $id) {
+function mod_swisschess_make_swtwriter_write($handle, $token, $field, $id) {
 	fseek($handle, $token['begin']);
 	$string = fread($handle, $token['end'] - $token['begin'] + 1);
 	parse_str($string, $info4);
@@ -196,7 +196,7 @@ function mod_tournaments_make_swtwriter_write($handle, $token, $field, $id) {
 	return true;
 }
 
-function mod_tournaments_make_swtwriter_delete($handle, $token) {
+function mod_swisschess_make_swtwriter_delete($handle, $token) {
 	fseek($handle, $token['begin']);
 	$repeat = $token['end'] - $token['begin'] + 1;
 	fwrite($handle, str_repeat(chr(0), $repeat));

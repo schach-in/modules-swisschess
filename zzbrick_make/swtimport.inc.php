@@ -87,10 +87,10 @@ function mod_swisschess_make_swtimport($vars, $settings, $event) {
 	$form = $tournament['out'][35] === 1 ? 'team' :'single';
 
 	// Check: richtiges Turnier?
-	mf_tournaments_swisschess_check($event, $form, $tournament['out']);
+	mf_swisschess_check($event, $form, $tournament['out']);
 
 	if ($_SERVER['REQUEST_METHOD'] === 'POST')
-		$import = mod_tournaments_make_swtimport_import($event, $form, $tournament);
+		$import = mod_swisschess_make_swtimport_import($event, $form, $tournament);
 	else
 		$import['no_post'] = true;
 
@@ -107,7 +107,7 @@ function mod_swisschess_make_swtimport($vars, $settings, $event) {
  * @param array $tournament
  * @return array
  */
-function mod_tournaments_make_swtimport_import($event, $form, $tournament) {
+function mod_swisschess_make_swtimport_import($event, $form, $tournament) {
 	wrap_setting('log_username', sprintf('SWT-Import: %s', $event['identifier']));
 
 	$old_error_handling = wrap_setting('error_handling');
@@ -118,41 +118,41 @@ function mod_tournaments_make_swtimport_import($event, $form, $tournament) {
 	$import = [];
 	// Datenintegrität prüfen, erst ab SWT mit Info4-Feld möglich
 	if (empty($event['swisschess']['ignore_ids'])) {
-		list($tournament, $import) = mod_tournaments_make_swtimport_integrity($tournament, $form);
+		list($tournament, $import) = mod_swisschess_make_swtimport_integrity($tournament, $form);
 	}
 
 	// Team importieren
 	if ($form === 'team') {
-		$ids = mod_tournaments_make_swtimport_teams($event, $tournament['out']);
+		$ids = mod_swisschess_make_swtimport_teams($event, $tournament['out']);
 	}
 
 	// Fehlende Personen ergänzen
-	$ids = mod_tournaments_make_swtimport_persons($event, $tournament['out']['Spieler'], $ids, $import);
+	$ids = mod_swisschess_make_swtimport_persons($event, $tournament['out']['Spieler'], $ids, $import);
 
 	// Aufstellungen importieren
-	$ids = mod_tournaments_make_swtimport_participations($event, $tournament['out']['Spieler'], $ids);
+	$ids = mod_swisschess_make_swtimport_participations($event, $tournament['out']['Spieler'], $ids);
 
 	// Paarungen importieren
 	// @todo prüfen, ob aktuelle Runde erforderlich (falls nur 1. Runde ausgelost 
 	// ist, ergibt $aktuelle_runde false)
 	if ($form === 'team') { // AND $aktuelle_runde) {
-		$ids = mod_tournaments_make_swtimport_paarungen($event, $tournament['out'], $ids);
+		$ids = mod_swisschess_make_swtimport_paarungen($event, $tournament['out'], $ids);
 	}
 
 	// Partien importieren
-	$ids = mod_tournaments_make_swtimport_partien($event, $tournament['out'], $ids);
+	$ids = mod_swisschess_make_swtimport_partien($event, $tournament['out'], $ids);
 
 	// Überzählige Partien löschen
-	mod_tournaments_make_swtimport_partien_loeschen($event['event_id'], $ids['partien']);
+	mod_swisschess_make_swtimport_partien_loeschen($event['event_id'], $ids['partien']);
 
 	$page['text'] = 'Import erfolgreich';
 	wrap_setting('error_prefix', '');
 	wrap_setting('error_handling', $old_error_handling);
 	
 	if ($form === 'team') {
-		$ids = mod_tournaments_make_swtimport_delete($ids, $event['event_id'], 'teams');
+		$ids = mod_swisschess_make_swtimport_delete($ids, $event['event_id'], 'teams');
 	}
-	$ids = mod_tournaments_make_swtimport_delete($ids, $event['event_id'], 'participations');
+	$ids = mod_swisschess_make_swtimport_delete($ids, $event['event_id'], 'participations');
 
 	foreach ($ids['t'] as $bereich => $anzahl) {
 		$importiert = [
@@ -210,7 +210,7 @@ function mod_tournaments_make_swtimport_import($event, $form, $tournament) {
  * @param array $data
  * return bool (exit on error)
  */ 
-function mf_tournaments_swisschess_check($event, $form, $data) {
+function mf_swisschess_check($event, $form, $data) {
 	if ($form === 'single' AND !wrap_setting('tournaments_type_single')) {
 		wrap_error(
 			'Turnier wurde als Mannschaftsturnier angelegt, die SWT-Datei ist aber für ein Einzelturnier!',
@@ -276,7 +276,7 @@ function mf_tournaments_swisschess_check($event, $form, $data) {
  * implementiert, da nicht klar, ob der seltene Fall auftritt, dass nachträglich
  * Teams hinzugefügt werden
  */
-function mod_tournaments_make_swtimport_teams($event, $tournament) {
+function mod_swisschess_make_swtimport_teams($event, $tournament) {
 	$ids['team_hex'] = [];
 	$ids['team_dec'] = [];
 	$ids['team_spielfrei'] = [];
@@ -294,7 +294,7 @@ function mod_tournaments_make_swtimport_teams($event, $tournament) {
 	$t_teams_first = [];
 	foreach ($tournament['Teams'] as $t_key => $team) {
 		$team_id = empty($event['swisschess']['ignore_ids'])
-			? mod_tournaments_make_swtimport_team_id($team, $tournament['Spieler'], $event['event_id'])
+			? mod_swisschess_make_swtimport_team_id($team, $tournament['Spieler'], $event['event_id'])
 			: false;
 		$tournament['Teams'][$t_key]['team_id'] = $team_id;
 		$team_ids[$t_key] = $team_id;
@@ -335,9 +335,9 @@ function mod_tournaments_make_swtimport_teams($event, $tournament) {
 				// Teams mit dem Namen 'spielfrei' erlauben.
 				$values['POST']['spielfrei'] = 'ja';
 			} elseif ($event['turnierform'] === 'm-v') {
-				$verein = mod_tournaments_make_swtimport_verein($team, $tournament['Spieler']);
+				$verein = mod_swisschess_make_swtimport_verein($team, $tournament['Spieler']);
 				if ($verein) {
-					$values['POST']['team_no'] = mod_tournaments_make_swtimport_teamno($team[1000], $verein);
+					$values['POST']['team_no'] = mod_swisschess_make_swtimport_teamno($team[1000], $verein);
 					if ($values['POST']['team_no']) {
 						$values['POST']['team'] = trim(substr(
 							$values['POST']['team'], 0, -strlen($values['POST']['team_no'])
@@ -380,7 +380,7 @@ function mod_tournaments_make_swtimport_teams($event, $tournament) {
  * @int $event_id
  * @return array $ids
  */
-function mod_tournaments_make_swtimport_delete($ids, $event_id, $type) {
+function mod_swisschess_make_swtimport_delete($ids, $event_id, $type) {
 	switch ($type) {
 	case 'teams':
 		$id_field = 'team_id';
@@ -433,7 +433,7 @@ function mod_tournaments_make_swtimport_delete($ids, $event_id, $type) {
  * @param array $import
  * @return array $ids
  */
-function mod_tournaments_make_swtimport_persons($event, $spielerliste, $ids, $import) {
+function mod_swisschess_make_swtimport_persons($event, $spielerliste, $ids, $import) {
 	wrap_include_files('zzform/editing', 'custom');
 	wrap_include_files('custom/persons', 'custom');
 	wrap_include_files('zzform/batch', 'contacts');
@@ -590,7 +590,7 @@ function mod_tournaments_make_swtimport_persons($event, $spielerliste, $ids, $im
  * @param array $ids
  * @return array $ids
  */
-function mod_tournaments_make_swtimport_participations($event, $spielerliste, $ids) {
+function mod_swisschess_make_swtimport_participations($event, $spielerliste, $ids) {
 	if (wrap_setting('tournaments_type_team')) {
 		$sql = 'SELECT IF(gastspieler = "ja", 1, 0)
 			FROM tournaments WHERE event_id = %d';
@@ -655,9 +655,9 @@ function mod_tournaments_make_swtimport_participations($event, $spielerliste, $i
 			$values['POST']['t_nachname'] = $spielername[0];
 			$verein = [];
 			if ($spieler[2010])
-				$verein = mod_tournaments_make_swtimport_verein_zps($spieler[2010]);
+				$verein = mod_swisschess_make_swtimport_verein_zps($spieler[2010]);
 			if (!$verein) {
-				$verein = mod_tournaments_make_swtimport_verein_name($spieler[2001]);
+				$verein = mod_swisschess_make_swtimport_verein_name($spieler[2001]);
 			}
 			if ($verein) {
 				$values['POST']['club_contact_id'] = $verein['contact_id'];
@@ -683,7 +683,7 @@ function mod_tournaments_make_swtimport_participations($event, $spielerliste, $i
 		}
 		$values['POST']['t_dwz'] = $spieler[2004];
 		$values['POST']['t_elo'] = $spieler[2003];
-		$values['POST']['t_fidetitel'] = mod_tournaments_make_swtimport_titel($spieler[2002]);
+		$values['POST']['t_fidetitel'] = mod_swisschess_make_swtimport_titel($spieler[2002]);
 		if (wrap_setting('tournaments_type_team') AND $gastspieler) {
 			$values['POST']['gastspieler'] = ($spieler[2006] === 'G' ? 'ja' : 'nein');
 		}
@@ -729,7 +729,7 @@ function mod_tournaments_make_swtimport_participations($event, $spielerliste, $i
  * @param string $titel
  * @return string
  */
-function mod_tournaments_make_swtimport_titel($titel) {
+function mod_swisschess_make_swtimport_titel($titel) {
 	$valid_titles = [
 		'GM', 'IM', 'FM', 'CM', 'WGM', 'WIM', 'WFM', 'WCM'
 	];
@@ -745,7 +745,7 @@ function mod_tournaments_make_swtimport_titel($titel) {
  * @param array $ids
  * @return array $ids
  */
-function mod_tournaments_make_swtimport_paarungen($event, $tournament, $ids) {
+function mod_swisschess_make_swtimport_paarungen($event, $tournament, $ids) {
 	$ids['paarungen'] = [];
 	foreach ($tournament['Mannschaftspaarungen'] as $team_hex_id => $team) {
 		foreach ($team as $runde => $paarung) {
@@ -835,7 +835,7 @@ function mod_tournaments_make_swtimport_paarungen($event, $tournament, $ids) {
  * @param array $ids
  * @return array $ids
  */
-function mod_tournaments_make_swtimport_partien($event, $tournament, $ids) {
+function mod_swisschess_make_swtimport_partien($event, $tournament, $ids) {
 	$ids['partien'] = [];
 
 	// Korrektur schwarz/weiß-Bretter
@@ -1118,7 +1118,7 @@ function mod_tournaments_make_swtimport_partien($event, $tournament, $ids) {
  * @param array $game_ids
  * @return void
  */
-function mod_tournaments_make_swtimport_partien_loeschen($event_id, $game_ids) {
+function mod_swisschess_make_swtimport_partien_loeschen($event_id, $game_ids) {
 	if (!$game_ids) return;
 
 	$sql = 'SELECT partie_id FROM partien
@@ -1138,7 +1138,7 @@ function mod_tournaments_make_swtimport_partien_loeschen($event_id, $game_ids) {
  * @param array $spielerliste
  * @return array
  */
-function mod_tournaments_make_swtimport_verein($team, $spielerliste) {
+function mod_swisschess_make_swtimport_verein($team, $spielerliste) {
 	if ($team[1008]) {
 		// Steht es direkt drin?
 		$zps = $team[1008];
@@ -1157,7 +1157,7 @@ function mod_tournaments_make_swtimport_verein($team, $spielerliste) {
 		$zps_codes = array_flip($zps_codes);
 		$zps = reset($zps_codes);
 	}
-	return mod_tournaments_make_swtimport_verein_zps($zps);
+	return mod_swisschess_make_swtimport_verein_zps($zps);
 }
 
 /**
@@ -1167,7 +1167,7 @@ function mod_tournaments_make_swtimport_verein($team, $spielerliste) {
  * @return array
  *		int 'contact_id', string 'contact'
  */
-function mod_tournaments_make_swtimport_verein_zps($zps) {
+function mod_swisschess_make_swtimport_verein_zps($zps) {
 	$sql = 'SELECT contact_id, contact
 		FROM contacts
 		LEFT JOIN contacts_identifiers ok
@@ -1200,7 +1200,7 @@ function mod_tournaments_make_swtimport_verein_zps($zps) {
  * @param string $verein
  * @return array
  */
-function mod_tournaments_make_swtimport_verein_name($verein) {
+function mod_swisschess_make_swtimport_verein_name($verein) {
 	$sql = 'SELECT contact_id, contact
 		FROM contacts
 		WHERE contact LIKE "%%%s%%"';
@@ -1217,7 +1217,7 @@ function mod_tournaments_make_swtimport_verein_name($verein) {
  * @param array $verein
  * @return string
  */
-function mod_tournaments_make_swtimport_teamno($teamname, $verein) {
+function mod_swisschess_make_swtimport_teamno($teamname, $verein) {
 	if ($teamname === $verein['contact']) return '';
 	$teamname = explode(' ', $teamname);
 	$vereinsname = explode(' ', $verein['contact']);
@@ -1236,7 +1236,7 @@ function mod_tournaments_make_swtimport_teamno($teamname, $verein) {
  * @param array $spielerliste
  * @return string
  */
-function mod_tournaments_make_swtimport_team_id($team, $spielerliste, $event_id) {
+function mod_swisschess_make_swtimport_team_id($team, $spielerliste, $event_id) {
 	// 1. Fremdschlüssel aus Datenbank in SWT?
 	$info4 = false;
 	if ($team[1046]) {
@@ -1307,7 +1307,7 @@ function cms_swtparser_ergebnis($ergebnis) {
  * 	array $tournament
  *	array $import
  */
-function mod_tournaments_make_swtimport_integrity($tournament, $form) {
+function mod_swisschess_make_swtimport_integrity($tournament, $form) {
 	// Info4 gibt es in alten Versionen nicht, prüfen
 	$first_player = reset($tournament['out']['Spieler']);
 	if (!array_key_exists(2038, $tournament['out']['Spieler'])) {
@@ -1316,11 +1316,11 @@ function mod_tournaments_make_swtimport_integrity($tournament, $form) {
 	$import = [];
 	if ($form === 'team') {
 		list($tournament['out']['Teams'], $import_settings)
-			= mod_tournaments_make_swtimport_duplicate_id($tournament['out']['Teams'], 'team_id');
+			= mod_swisschess_make_swtimport_duplicate_id($tournament['out']['Teams'], 'team_id');
 		$import = array_merge($import, $import_settings);
 	}
 	list($tournament['out']['Spieler'], $import_settings)
-		= mod_tournaments_make_swtimport_duplicate_id($tournament['out']['Spieler'], 'person_id');
+		= mod_swisschess_make_swtimport_duplicate_id($tournament['out']['Spieler'], 'person_id');
 	$import = array_merge($import, $import_settings);
 	return [$tournament, $import];
 }
@@ -1332,7 +1332,7 @@ function mod_tournaments_make_swtimport_integrity($tournament, $form) {
  * @param string $field
  * @return array
  */
-function mod_tournaments_make_swtimport_duplicate_id($data, $field) {
+function mod_swisschess_make_swtimport_duplicate_id($data, $field) {
 	$existing_ids = [];
 	$error_ids = [];
 	$import = [];

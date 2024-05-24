@@ -27,32 +27,30 @@ $zz['page']['referer'] = '../';
 unset($zz['fields'][25]);
 unset($zz['fields'][26]);
 
-if (wrap_setting('tournaments_upload_swt')) {
-	$zz['fields'][22]['title'] = 'SWT-Datei';
-	$zz['fields'][22]['field_name'] = 'swt';
-	$zz['fields'][22]['dont_show_missing'] = true;
-	$zz['fields'][22]['type'] = 'upload_image';
-	$zz['fields'][22]['path'] = [
-		'root' => wrap_setting('media_folder').'/swt/',
-		'webroot' => wrap_setting('media_internal_path').'/swt/',
-		'field1' => 'event_identifier', 
-		'string2' => '.swt'
-	];
-	$zz['fields'][22]['input_filetypes'] = ['swt'];
-	$zz['fields'][22]['link'] = [
-		'string1' => wrap_setting('media_internal_path').'/swt/',
-		'field1' => 'event_identifier',
-		'string2' => '.swt'
-	];
-	$zz['fields'][22]['optional_image'] = true;
-	$zz['fields'][22]['image'][0]['title'] = 'gro&szlig;';
-	$zz['fields'][22]['image'][0]['field_name'] = 'gross';
-	$zz['fields'][22]['image'][0]['path'] = $zz['fields'][22]['path'];
-	$zz['fields'][22]['if'][1]['separator'] = 'text <div class="separator">Für Mannschaftsturniere</div>';
-	$zz['fields'][22]['if'][2]['separator'] = true;
-	$zz['fields'][22]['if']['add']['hide_in_form'] = true;
-	$zz['fields'][22]['title_tab'] = 'Dateien';
-}
+$zz['fields'][22]['title'] = 'SWT-Datei';
+$zz['fields'][22]['field_name'] = 'swt';
+$zz['fields'][22]['dont_show_missing'] = true;
+$zz['fields'][22]['type'] = 'upload_image';
+$zz['fields'][22]['path'] = [
+	'root' => wrap_setting('media_folder').'/swt/',
+	'webroot' => wrap_setting('media_internal_path').'/swt/',
+	'field1' => 'event_identifier', 
+	'string2' => '.swt'
+];
+$zz['fields'][22]['input_filetypes'] = ['swt'];
+$zz['fields'][22]['link'] = [
+	'string1' => wrap_setting('media_internal_path').'/swt/',
+	'field1' => 'event_identifier',
+	'string2' => '.swt'
+];
+$zz['fields'][22]['optional_image'] = true;
+$zz['fields'][22]['image'][0]['title'] = 'gro&szlig;';
+$zz['fields'][22]['image'][0]['field_name'] = 'gross';
+$zz['fields'][22]['image'][0]['path'] = $zz['fields'][22]['path'];
+$zz['fields'][22]['if'][1]['separator'] = 'text <div class="separator">Für Mannschaftsturniere</div>';
+$zz['fields'][22]['if'][2]['separator'] = true;
+$zz['fields'][22]['if']['add']['hide_in_form'] = true;
+$zz['fields'][22]['title_tab'] = 'Dateien';
 
 $zz['fields'][22]['if'][1]['separator'] = false;
 $zz['fields'][22]['if'][2]['separator'] = false;
