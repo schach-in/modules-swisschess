@@ -57,15 +57,12 @@ function mod_swisschess_make_swtimport($vars, $settings, $event) {
 	// @todo unterstütze Parameter für UTF-8-Codierung
 	$tournament = swtparser(wrap_setting('media_folder').'/swt/'.$swt, wrap_setting('character_set'));
 	$tournament = $tournament['out'];
-	$field_names = swtparser_get_field_names('de');
-
-	$form = $tournament[35] === 1 ? 'team' :'single';
-
+	
 	// Check: richtiges Turnier?
-	mf_swisschess_check($event, $form, $tournament);
+	mf_swisschess_check($event, $tournament);
 
 	if ($_SERVER['REQUEST_METHOD'] === 'POST')
-		$import = mod_swisschess_make_swtimport_import($event, $form, $tournament);
+		$import = mod_swisschess_make_swtimport_import($event, $tournament);
 	else
 		$import['no_post'] = true;
 
@@ -78,11 +75,10 @@ function mod_swisschess_make_swtimport($vars, $settings, $event) {
  * actual import of data from SWT file
  *
  * @param array $event
- * @param string $form
  * @param array $tournament
  * @return array
  */
-function mod_swisschess_make_swtimport_import($event, $form, $tournament) {
+function mod_swisschess_make_swtimport_import($event, $tournament) {
 	wrap_setting('log_username', sprintf('SWT-Import: %s', $event['identifier']));
 
 	$old_error_handling = wrap_setting('error_handling');
@@ -93,11 +89,11 @@ function mod_swisschess_make_swtimport_import($event, $form, $tournament) {
 	$import = [];
 	// Datenintegrität prüfen, erst ab SWT mit Info4-Feld möglich
 	if (!wrap_setting('swisschess_ignore_ids')) {
-		list($tournament, $import) = mod_swisschess_make_swtimport_integrity($tournament, $form);
+		list($tournament, $import) = mod_swisschess_make_swtimport_integrity($tournament);
 	}
 
 	// Team importieren
-	if ($form === 'team') {
+	if (mf_swisschess_tournament_type($tournament) === 'team') {
 		$ids = mod_swisschess_make_swtimport_teams($event, $tournament);
 	}
 
@@ -110,7 +106,7 @@ function mod_swisschess_make_swtimport_import($event, $form, $tournament) {
 	// Paarungen importieren
 	// @todo prüfen, ob aktuelle Runde erforderlich (falls nur 1. Runde ausgelost 
 	// ist, ergibt $aktuelle_runde false)
-	if ($form === 'team') { // AND $aktuelle_runde) {
+	if (mf_swisschess_tournament_type($tournament) === 'team') { // AND $aktuelle_runde) {
 		$ids = mod_swisschess_make_swtimport_paarungen($event, $tournament, $ids);
 	}
 
@@ -124,7 +120,7 @@ function mod_swisschess_make_swtimport_import($event, $form, $tournament) {
 	wrap_setting('error_prefix', '');
 	wrap_setting('error_handling', $old_error_handling);
 	
-	if ($form === 'team') {
+	if (mf_swisschess_tournament_type($tournament) === 'team') {
 		$ids = mod_swisschess_make_swtimport_delete($ids, $event['event_id'], 'teams');
 	}
 	$ids = mod_swisschess_make_swtimport_delete($ids, $event['event_id'], 'participations');
@@ -185,14 +181,14 @@ function mod_swisschess_make_swtimport_import($event, $form, $tournament) {
  * @param array $data
  * return bool (exit on error)
  */ 
-function mf_swisschess_check($event, $form, $data) {
-	if ($form === 'single' AND !wrap_setting('tournaments_type_single')) {
+function mf_swisschess_check($event, $data) {
+	if (mf_swisschess_tournament_type($data) === 'single' AND !wrap_setting('tournaments_type_single')) {
 		wrap_error(
 			'Turnier wurde als Mannschaftsturnier angelegt, die SWT-Datei ist aber für ein Einzelturnier!',
 			E_USER_ERROR
 		);
 	}
-	if ($form === 'team' AND !wrap_setting('tournaments_type_team')) {
+	if (mf_swisschess_tournament_type($data) === 'team' AND !wrap_setting('tournaments_type_team')) {
 		wrap_error(
 			'Turnier wurde als Einzelturnier angelegt, die SWT-Datei ist aber für ein Mannschaftsturnier!',
 			E_USER_ERROR
@@ -202,7 +198,7 @@ function mf_swisschess_check($event, $form, $data) {
 	// no further check possible if IDs in Swiss Chess must not be used
 	if (wrap_setting('swisschess_ignore_ids')) return true;
 	
-	if ($form === 'single') {
+	if (mf_swisschess_tournament_type($data) === 'single') {
 		$sql = 'SELECT person_id FROM participations
 			LEFT JOIN persons USING (contact_id)
 			WHERE usergroup_id = %d AND event_id = %d';
@@ -1277,19 +1273,18 @@ function cms_swtparser_ergebnis($ergebnis) {
  * Prüfe, ob Dateneingabe plausibel, insbesondere Info4
  *
  * @param array $tournament
- * @param string $form
  * @return array
  * 	array $tournament
  *	array $import
  */
-function mod_swisschess_make_swtimport_integrity($tournament, $form) {
+function mod_swisschess_make_swtimport_integrity($tournament) {
 	// Info4 gibt es in alten Versionen nicht, prüfen
 	$first_player = reset($tournament['Spieler']);
 	if (!array_key_exists(2038, $tournament['Spieler'])) {
 		return [$tournament, []];
 	}
 	$import = [];
-	if ($form === 'team') {
+	if (mf_swisschess_tournament_type($tournament) === 'team') {
 		list($tournament['Teams'], $import_settings)
 			= mod_swisschess_make_swtimport_duplicate_id($tournament['Teams'], 'team_id');
 		$import = array_merge($import, $import_settings);
