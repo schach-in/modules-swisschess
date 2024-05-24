@@ -40,6 +40,22 @@ function mf_swisschess_tournament_type($data) {
 }
 
 /**
+ * get year of tournament begin
+ *
+ * @param array $data parsed file
+ * @return string
+ */
+function mf_swisschess_tournament_year($data) {
+	wrap_include_files('validate', 'zzform');
+	$field_names = swtparser_get_field_names('de');
+	$key = array_search('Datum Start', $field_names);
+	$key = zz_check_date($data[$key]);
+	if (!$key) return '';
+	return substr($key, 0, strpos($key, '-'));
+
+}
+
+/**
  * check, whether SWT file matches tournament
  *
  * @param array $event
@@ -53,6 +69,12 @@ function mf_swisschess_filematch($event, $data) {
 	if (mf_swisschess_tournament_type($data) === 'team' AND !wrap_setting('tournaments_type_team'))
 		return 'Turnier wurde als Einzelturnier angelegt, die SWT-Datei ist aber für ein Mannschaftsturnier!';
 
+	$event_year = substr($event['date_begin'], 0, 4);
+	$file_year = mf_swisschess_tournament_year($data);
+	if ($file_year !== $event_year)
+		return wrap_text(
+			'This tournament file belongs to a tournament from %d, but the tournament will take place in %d.',
+			['values' => [$file_year, $event_year]]);
 
 	// no further check possible if IDs in Swiss Chess must not be used
 	if (wrap_setting('swisschess_ignore_ids')) return '';

@@ -26,3 +26,7 @@ msgstr ""
 #: zzbrick_request/swtreader.inc.php
 msgid "SWT file `%s` does not exist. Please upload a file first."
 msgstr ""
+
+#: zzbrick_make/swtimport.inc.php
+msgid "This tournament file belongs to a tournament from %d, but the tournament will take place in %d."
+msgstr ""

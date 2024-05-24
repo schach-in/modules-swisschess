@@ -26,3 +26,11 @@ msgstr ""
 msgid "SWT file `%s` does not exist. Please upload a file first."
 msgstr ""
 "SWT-Datei `%s` existiert nicht. Bitte laden Sie zuerst eine Datei hoch."
+
+#: zzbrick_make/swtimport.inc.php
+msgid ""
+"This tournament file belongs to a tournament from %d, but the tournament "
+"will take place in %d."
+msgstr ""
+"Diese Turnierdatei gehört zu einem Turnier aus %d, aber das Turnier "
+"findet in %d statt."
