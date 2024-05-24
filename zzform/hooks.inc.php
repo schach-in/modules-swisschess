@@ -16,7 +16,7 @@
 function mf_swisschess_swtimport($ops) {
 	$event = wrap_static('zzform', 'event');
 	if (!$event) return [];
-	$url = wrap_path('tournaments_job_swt', $event['identifier'], false);
+	$url = wrap_path('swisschess_job_swt', $event['identifier'], false);
 	if (!$url) return [];
 	// there might be access restrictions on swtimport URL, therefore use robot username here
 	wrap_setting('log_username', wrap_setting('robot_username'));
