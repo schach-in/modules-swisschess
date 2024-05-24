@@ -32,24 +32,17 @@ function mf_swisschess_tournament_type($data) {
  * @param array $event
  * @param string $event
  * @param array $data
- * return bool (exit on error)
+ * return string error message
  */ 
 function mf_swisschess_filematch($event, $data) {
-	if (mf_swisschess_tournament_type($data) === 'single' AND !wrap_setting('tournaments_type_single')) {
-		wrap_error(
-			'Turnier wurde als Mannschaftsturnier angelegt, die SWT-Datei ist aber für ein Einzelturnier!',
-			E_USER_ERROR
-		);
-	}
-	if (mf_swisschess_tournament_type($data) === 'team' AND !wrap_setting('tournaments_type_team')) {
-		wrap_error(
-			'Turnier wurde als Einzelturnier angelegt, die SWT-Datei ist aber für ein Mannschaftsturnier!',
-			E_USER_ERROR
-		);
-	}
+	if (mf_swisschess_tournament_type($data) === 'single' AND !wrap_setting('tournaments_type_single'))
+		return 'Turnier wurde als Mannschaftsturnier angelegt, die SWT-Datei ist aber für ein Einzelturnier!';
+	if (mf_swisschess_tournament_type($data) === 'team' AND !wrap_setting('tournaments_type_team'))
+		return 'Turnier wurde als Einzelturnier angelegt, die SWT-Datei ist aber für ein Mannschaftsturnier!';
+
 
 	// no further check possible if IDs in Swiss Chess must not be used
-	if (wrap_setting('swisschess_ignore_ids')) return true;
+	if (wrap_setting('swisschess_ignore_ids')) return '';
 	
 	if (mf_swisschess_tournament_type($data) === 'single') {
 		$sql = 'SELECT person_id FROM participations
@@ -83,9 +76,8 @@ function mf_swisschess_filematch($event, $data) {
 		$swt_ids[] = $fields[$id_field_name];
 	}
 	$diff = array_diff($db_ids, $swt_ids);
-	if ($db_ids AND $swt_ids AND $diff === $db_ids) {
+	if ($db_ids AND $swt_ids AND $diff === $db_ids)
 		// Kein Team in Datenbank passt zu Teams aus SWT
-		wrap_error(sprintf('SWT-Import: Turnierdatei passt nicht zum Turnier. Bitte lade die richtige Datei hoch! (%s)', $event['identifier']), E_USER_ERROR);
-	}
-	return true;
+		return sprintf('SWT-Import: Turnierdatei passt nicht zum Turnier. Bitte lade die richtige Datei hoch! (%s)', $event['identifier']);
+	return '';
 }

@@ -59,7 +59,8 @@ function mod_swisschess_make_swtimport($vars, $settings, $event) {
 	$tournament = $tournament['out'];
 	
 	// Check: richtiges Turnier?
-	mf_swisschess_filematch($event, $tournament);
+	$error_msg = mf_swisschess_filematch($event, $tournament);
+	if ($error_msg) wrap_error($error_msg, E_USER_ERROR);
 
 	if ($_SERVER['REQUEST_METHOD'] === 'POST')
 		$import = mod_swisschess_make_swtimport_import($event, $tournament);
