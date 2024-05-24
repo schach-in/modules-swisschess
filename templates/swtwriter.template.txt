@@ -1,0 +1,46 @@
+# swisschess module
+# HTML output: SWT writer
+#
+# Part of »Zugzwang Project«
+# https://www.zugzwang.org/modules/swisschess
+#
+# @author Gustaf Mossakowski <gustaf@koenige.org>
+# @copyright Copyright © 2013, 2014, 2020-2022, 2024 Gustaf Mossakowski
+# @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
+#
+%%% condition if request_delete %%%
+<p><form method="POST"><input type="submit" value="IDs löschen"></form></p>
+
+%%% condition elseif deletions %%%
+<p>Es wurden %%% item deletions %%% Einträge gelöscht. Du kannst jetzt die
+Zuordnungen korrigieren (Fremdschlüssel löschen) und solltest danach die
+neuen Werte in die Datei schreiben.</p>
+
+%%% condition elseif changes %%%
+<p>Es wurden %%% item changes_team_id "%s Teams" 0 "keine Teams" 1 "1 Team" %%%
+ und %%% item changes_person_id "%s Personen" 0 "keine Personen" 1 "1 Person"  %%%
+ neu geschrieben. Bitte 
+<a href="%%% setting media_internal_path %%%/swt/%%% item identifier %%%.swt">lade die geänderte Datei
+herunter</a> und benutze sie für den weiteren Turnierverlauf!</p>
+
+<p>Bei der weiteren Arbeit mit SwissChess unbedingt beachten:</p>
+
+<ul>
+<li>Die Personen haben in Infofeld 4 (Doppelklick auf die jeweilige Person in der 
+Teilnehmerliste) eine ID erhalten. Diese ID muss mit der Person verknüpft bleiben, 
+um später den korrekten Import in das DSJ-System zu gewährleisten.</li>
+<li>Jede Person kann an ein anderes Brett umgesetzt werden.</li>
+<li>Tippfehler im Namen können korrigiert, fehlende Angaben (z.B. das Geburtsjahr) ergänzt werden.</li>
+<li>Soll hingegen eine Person gelöscht und durch eine neue ersetzt werden, muss 
+dies so erfolgen, dass die erste deaktiviert und die zweite neu hinzugefügt wird
+(alternativ kann man die person_id aus dem Infofeld 4 löschen).</li>
+</ul>
+
+<p>Neue Personen werden bei einem späteren Import in das DSJ-System übernommen.
+Anschließend muss der SWT-Writer erneut ausgeführt werden.</p>
+
+%%% condition else %%%
+<p>Es wurden keine Änderungen an der SWT-Datei vorgenommen. Du brauchst nichts 
+weiter zu machen.</p>
+
+%%% condition endif %%%

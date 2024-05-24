@@ -1,0 +1,34 @@
+# swisschess module
+# HTML output: SWT tournament import
+#
+# Part of »Zugzwang Project«
+# https://www.zugzwang.org/modules/swisschess
+#
+# @author Gustaf Mossakowski <gustaf@koenige.org>
+# @copyright Copyright © 2013, 2015, 2020-2022 Gustaf Mossakowski
+# @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
+#
+%%% condition if no_post %%%
+<form method="POST" action="">
+<input type="submit" value="%%% text Start import from SWT file %%%">
+</form>
+%%% condition else %%%
+%%% condition if importiert %%%
+<dl>
+%%% loop importiert %%%
+<dt>%%% item tabelle %%%:</dt>
+%%% loop eintraege %%%
+<dd>%%% item count "%s Einträge" 0 "keine Einträge" 1 "1 Eintrag" %%% %%% item typ %%%</dd>
+%%% loop end %%%
+%%% loop end %%%
+</dl>
+%%% condition endif %%%
+
+%%% condition if writer %%%
+<p>Es wurden neue IDs für Personen und/oder Teams eingefügt. Wenn Du die SWT-Datei
+erneut importieren willst, solltest Du die IDs <a href="../swtwriter/">
+vorher in die SWT-Datei schreiben</a> und die Datei danach herunterladen.</p>
+%%% condition endif %%%
+
+<p>SWT-Import abgeschlossen.</p>
+%%% condition endif %%%
