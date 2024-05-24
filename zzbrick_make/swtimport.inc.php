@@ -29,9 +29,9 @@ function mod_swisschess_make_swtimport($vars, $settings, $event) {
 	$page['breadcrumbs'][]['title'] = 'SWT-Import';
 	
 	// is there a file?
-	$swt = $event['identifier'].'.swt';
-	if (!file_exists(wrap_setting('media_folder').'/swt/'.$swt)) {
-		wrap_error(sprintf('Datei swt/%s existiert nicht', $swt));
+	$filename = sprintf('%s/swt/%s.swt', wrap_setting('media_folder'), $event['identifier']);
+	if (!file_exists($filename)) {
+		wrap_error(sprintf('Datei swt/%s.swt existiert nicht', $event['identifier']));
 		wrap_setting('error_prefix', '');
 		$page['text'] = '<p class="error">Die SWT-Datei für dieses Turnier existiert (noch) nicht. Bitte lade erst eine hoch.</p>';
 		$page['error_keep_page'] = true;
@@ -52,11 +52,7 @@ function mod_swisschess_make_swtimport($vars, $settings, $event) {
 	$sql = sprintf($sql, wrap_db_escape($event['event_id']));
 	$event['wertung_spielfrei'] = wrap_db_fetch($sql, '', 'single value');
 
-	// SWT-Parser einbinden
-	wrap_lib('swtparser');
-	// @todo unterstütze Parameter für UTF-8-Codierung
-	$tournament = swtparser(wrap_setting('media_folder').'/swt/'.$swt, wrap_setting('character_set'));
-	$tournament = $tournament['out'];
+	$tournament = mf_swisschess_parse($filename);
 	
 	// Check: richtiges Turnier?
 	$error_msg = mf_swisschess_filematch($event, $tournament);

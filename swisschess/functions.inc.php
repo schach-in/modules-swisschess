@@ -14,6 +14,19 @@
 
 
 /**
+ * parse a swisschess file
+ *
+ * @param array $filename
+ * @return array
+ */
+function mf_swisschess_parse($filename) {
+	wrap_lib('swtparser');
+	// @todo unterstütze Parameter für UTF-8-Codierung
+	$tournament = swtparser($filename, wrap_setting('character_set'));
+	return $tournament['out'];
+}
+
+/**
  * get tournament type
  *
  * @param array $data parsed file
