@@ -82,12 +82,13 @@ function mod_swisschess_make_swtimport($vars, $settings, $event) {
 	wrap_lib('swtparser');
 	// @todo unterstütze Parameter für UTF-8-Codierung
 	$tournament = swtparser(wrap_setting('media_folder').'/swt/'.$swt, wrap_setting('character_set'));
+	$tournament = $tournament['out'];
 	$field_names = swtparser_get_field_names('de');
 
-	$form = $tournament['out'][35] === 1 ? 'team' :'single';
+	$form = $tournament[35] === 1 ? 'team' :'single';
 
 	// Check: richtiges Turnier?
-	mf_swisschess_check($event, $form, $tournament['out']);
+	mf_swisschess_check($event, $form, $tournament);
 
 	if ($_SERVER['REQUEST_METHOD'] === 'POST')
 		$import = mod_swisschess_make_swtimport_import($event, $form, $tournament);
@@ -123,24 +124,24 @@ function mod_swisschess_make_swtimport_import($event, $form, $tournament) {
 
 	// Team importieren
 	if ($form === 'team') {
-		$ids = mod_swisschess_make_swtimport_teams($event, $tournament['out']);
+		$ids = mod_swisschess_make_swtimport_teams($event, $tournament);
 	}
 
 	// Fehlende Personen ergänzen
-	$ids = mod_swisschess_make_swtimport_persons($event, $tournament['out']['Spieler'], $ids, $import);
+	$ids = mod_swisschess_make_swtimport_persons($event, $tournament['Spieler'], $ids, $import);
 
 	// Aufstellungen importieren
-	$ids = mod_swisschess_make_swtimport_participations($event, $tournament['out']['Spieler'], $ids);
+	$ids = mod_swisschess_make_swtimport_participations($event, $tournament['Spieler'], $ids);
 
 	// Paarungen importieren
 	// @todo prüfen, ob aktuelle Runde erforderlich (falls nur 1. Runde ausgelost 
 	// ist, ergibt $aktuelle_runde false)
 	if ($form === 'team') { // AND $aktuelle_runde) {
-		$ids = mod_swisschess_make_swtimport_paarungen($event, $tournament['out'], $ids);
+		$ids = mod_swisschess_make_swtimport_paarungen($event, $tournament, $ids);
 	}
 
 	// Partien importieren
-	$ids = mod_swisschess_make_swtimport_partien($event, $tournament['out'], $ids);
+	$ids = mod_swisschess_make_swtimport_partien($event, $tournament, $ids);
 
 	// Überzählige Partien löschen
 	mod_swisschess_make_swtimport_partien_loeschen($event['event_id'], $ids['partien']);
@@ -227,7 +228,7 @@ function mf_swisschess_check($event, $form, $data) {
 	// no further check possible if IDs in Swiss Chess must not be used
 	if (!empty($event['swisschess']['ignore_ids'])) return true;
 	
-	if ($form === 'single_tournament') {
+	if ($form === 'single') {
 		$sql = 'SELECT person_id FROM participations
 			LEFT JOIN persons USING (contact_id)
 			WHERE usergroup_id = %d AND event_id = %d';
@@ -270,7 +271,7 @@ function mf_swisschess_check($event, $form, $data) {
  * Import der Teams
  *
  * @param array $event
- * @param array $tournament = $tournament['out']
+ * @param array $tournament
  * @return array $ids
  * @todo prüfe vor Nutzung Fremdschlüssel $import['use_team_id'], noch nicht
  * implementiert, da nicht klar, ob der seltene Fall auftritt, dass nachträglich
@@ -428,7 +429,7 @@ function mod_swisschess_make_swtimport_delete($ids, $event_id, $type) {
  * Import der Personen
  *
  * @param array $event
- * @param array $spielerliste = $tournament['out']['Spieler']
+ * @param array $spielerliste = $tournament['Spieler']
  * @param array $ids
  * @param array $import
  * @return array $ids
@@ -586,7 +587,7 @@ function mod_swisschess_make_swtimport_persons($event, $spielerliste, $ids, $imp
  * Import der Aufstellungen
  *
  * @param array $event
- * @param array $spielerliste = $tournament['out']['Spieler']
+ * @param array $spielerliste = $tournament['Spieler']
  * @param array $ids
  * @return array $ids
  */
@@ -741,7 +742,7 @@ function mod_swisschess_make_swtimport_titel($titel) {
  * Import der Teampaarungen
  *
  * @param array $event
- * @param array $tournament = $tournament['out']
+ * @param array $tournament
  * @param array $ids
  * @return array $ids
  */
@@ -831,7 +832,7 @@ function mod_swisschess_make_swtimport_paarungen($event, $tournament, $ids) {
  * Import der Partien
  *
  * @param array $event
- * @param array $tournament = $tournament['out']
+ * @param array $tournament
  * @param array $ids
  * @return array $ids
  */
@@ -1309,18 +1310,18 @@ function cms_swtparser_ergebnis($ergebnis) {
  */
 function mod_swisschess_make_swtimport_integrity($tournament, $form) {
 	// Info4 gibt es in alten Versionen nicht, prüfen
-	$first_player = reset($tournament['out']['Spieler']);
-	if (!array_key_exists(2038, $tournament['out']['Spieler'])) {
+	$first_player = reset($tournament['Spieler']);
+	if (!array_key_exists(2038, $tournament['Spieler'])) {
 		return [$tournament, []];
 	}
 	$import = [];
 	if ($form === 'team') {
-		list($tournament['out']['Teams'], $import_settings)
-			= mod_swisschess_make_swtimport_duplicate_id($tournament['out']['Teams'], 'team_id');
+		list($tournament['Teams'], $import_settings)
+			= mod_swisschess_make_swtimport_duplicate_id($tournament['Teams'], 'team_id');
 		$import = array_merge($import, $import_settings);
 	}
-	list($tournament['out']['Spieler'], $import_settings)
-		= mod_swisschess_make_swtimport_duplicate_id($tournament['out']['Spieler'], 'person_id');
+	list($tournament['Spieler'], $import_settings)
+		= mod_swisschess_make_swtimport_duplicate_id($tournament['Spieler'], 'person_id');
 	$import = array_merge($import, $import_settings);
 	return [$tournament, $import];
 }
