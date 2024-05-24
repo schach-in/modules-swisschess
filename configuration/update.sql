@@ -18,4 +18,5 @@
 /* 2024-05-24-6 */	UPDATE webpages SET parameters = REPLACE(parameters, '&access=tournaments_swisschess_debug', '&access=swisschess_debug') WHERE parameters LIKE "%&access=tournaments_swisschess_debug%";
 /* 2024-05-24-7 */	UPDATE webpages SET parameters = REPLACE(parameters, '&access=tournaments_swisschess_lst', '&access=swisschess_lst') WHERE parameters LIKE "%&access=tournaments_swisschess_lst%";
 /* 2024-05-24-8 */	UPDATE webpages SET parameters = REPLACE(parameters, '&access=tournaments_swisschess', '&access=swisschess_upload') WHERE parameters LIKE "%&access=tournaments_swisschess%";
-
+/* 2024-05-24-9 */	UPDATE tournaments SET urkunde_parameter = REPLACE(urkunde_parameter, '&swisschess[ignore_ids]=1', '&swisschess_ignore_ids=1') WHERE urkunde_parameter LIKE '%&swisschess[ignore_ids]=1%';
+/* 2024-05-24-10 */	UPDATE tournaments SET urkunde_parameter = REPLACE(urkunde_parameter, 'swisschess[ignore_ids]=1', '&swisschess_ignore_ids=1') WHERE urkunde_parameter LIKE '%swisschess[ignore_ids]=1%';

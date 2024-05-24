@@ -51,11 +51,6 @@ function mod_swisschess_make_swtimport($vars, $settings, $event) {
 		WHERE tournaments.event_id = %d';
 	$sql = sprintf($sql, wrap_db_escape($event['event_id']));
 	$event['wertung_spielfrei'] = wrap_db_fetch($sql, '', 'single value');
-	if ($event['tournament_parameter']) {
-		// @todo use wrap_module_parameters() to register parameters as settings
-		parse_str($event['tournament_parameter'], $parameter);
-		if ($parameter) $event += $parameter;
-	}
 
 	$sql = 'SELECT category_id, categories.path
 		FROM turniere_wertungen
@@ -108,7 +103,7 @@ function mod_swisschess_make_swtimport_import($event, $form, $tournament) {
 
 	$import = [];
 	// Datenintegrität prüfen, erst ab SWT mit Info4-Feld möglich
-	if (empty($event['swisschess']['ignore_ids'])) {
+	if (!wrap_setting('swisschess_ignore_ids')) {
 		list($tournament, $import) = mod_swisschess_make_swtimport_integrity($tournament, $form);
 	}
 
@@ -216,7 +211,7 @@ function mf_swisschess_check($event, $form, $data) {
 	}
 
 	// no further check possible if IDs in Swiss Chess must not be used
-	if (!empty($event['swisschess']['ignore_ids'])) return true;
+	if (wrap_setting('swisschess_ignore_ids')) return true;
 	
 	if ($form === 'single') {
 		$sql = 'SELECT person_id FROM participations
@@ -284,7 +279,7 @@ function mod_swisschess_make_swtimport_teams($event, $tournament) {
 	$t_teams_last = [];
 	$t_teams_first = [];
 	foreach ($tournament['Teams'] as $t_key => $team) {
-		$team_id = empty($event['swisschess']['ignore_ids'])
+		$team_id = !wrap_setting('swisschess_ignore_ids')
 			? mod_swisschess_make_swtimport_team_id($team, $tournament['Spieler'], $event['event_id'])
 			: false;
 		$tournament['Teams'][$t_key]['team_id'] = $team_id;
@@ -456,7 +451,7 @@ function mod_swisschess_make_swtimport_persons($event, $spielerliste, $ids, $imp
 	
 		$values = [];
 		$person_id = false;
-		if (array_key_exists(2038, $spieler) AND $spieler[2038] AND empty($event['swisschess']['ignore_ids'])) {
+		if (array_key_exists(2038, $spieler) AND $spieler[2038] AND !wrap_setting('swisschess_ignore_ids')) {
 			// 2038 Spieler Info4
 			parse_str($spieler[2038], $infos);
 			if (array_key_exists('person_id', $infos)) {
