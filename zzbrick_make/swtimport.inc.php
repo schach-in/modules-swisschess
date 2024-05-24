@@ -52,17 +52,6 @@ function mod_swisschess_make_swtimport($vars, $settings, $event) {
 	$sql = sprintf($sql, wrap_db_escape($event['event_id']));
 	$event['wertung_spielfrei'] = wrap_db_fetch($sql, '', 'single value');
 
-	$sql = 'SELECT category_id, categories.path
-		FROM turniere_wertungen
-		JOIN tournaments USING (tournament_id)
-		JOIN categories
-			ON turniere_wertungen.wertung_category_id = categories.category_id
-		WHERE event_id = %d
-		ORDER BY turniere_wertungen.reihenfolge
-	';
-	$sql = sprintf($sql, $event['event_id']);
-	$wertungen = wrap_db_fetch($sql, 'tw_id', 'key/value');
-
 	// SWT-Parser einbinden
 	wrap_lib('swtparser');
 	// @todo unterstütze Parameter für UTF-8-Codierung
