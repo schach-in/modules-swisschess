@@ -20,3 +20,5 @@
 /* 2024-05-24-8 */	UPDATE webpages SET parameters = REPLACE(parameters, '&access=tournaments_swisschess', '&access=swisschess_upload') WHERE parameters LIKE "%&access=tournaments_swisschess%";
 /* 2024-05-24-9 */	UPDATE tournaments SET urkunde_parameter = REPLACE(urkunde_parameter, '&swisschess[ignore_ids]=1', '&swisschess_ignore_ids=1') WHERE urkunde_parameter LIKE '%&swisschess[ignore_ids]=1%';
 /* 2024-05-24-10 */	UPDATE tournaments SET urkunde_parameter = REPLACE(urkunde_parameter, 'swisschess[ignore_ids]=1', '&swisschess_ignore_ids=1') WHERE urkunde_parameter LIKE '%swisschess[ignore_ids]=1%';
+/* 2024-05-26-1 */	INSERT INTO categories (`category`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Swiss-Chess', 'Dateiname für Swiss-Chess-Export', /*_ID categories identifiers _*/, 'identifiers/swiss-chess', "&alias=identifiers/swiss-chess&ournaments_identifier=1", NULL, NOW());
+/* 2024-05-26-2 */	INSERT INTO tournaments_identifiers (tournament_id, identifier, identifier_category_id) SELECT tournament_id, turnierkennung, /*_ID categories identifiers/swiss-chess _*/ FROM tournaments WHERE NOT ISNULL(turnierkennung);
