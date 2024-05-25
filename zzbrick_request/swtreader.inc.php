@@ -8,7 +8,7 @@
  * https://www.zugzwang.org/modules/swisschess
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2014, 2017, 2019, 2021, 2023 Gustaf Mossakowski
+ * @copyright Copyright © 2014, 2017, 2019, 2021, 2023-2024 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -17,8 +17,8 @@
  * Anzeige einer SWT-Datei
  *
  * @param array $params
- *		int [0]: Jahr
- *		int [1]: Turnierkennung
+ *		int [0]: year
+ *		int [1]: event identifier
  * @return array $page
  */
 function mod_swisschess_swtreader($params, $settings, $event) {

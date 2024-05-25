@@ -18,8 +18,8 @@
  * insbesondere der person_id und team_id in das Feld 'Info4'
  *
  * @param array $vars
- *		int [0]: Jahr
- *		int [1]: Turnierkennung
+ *		int [0]: year
+ *		int [1]: event identifier
  * @return array $page
  * @todo gemeinsame Elemente mit SWT-Import abstrahieren
  * @todo Einzel- oder Mannschaftsturnier aus Termine auslesen

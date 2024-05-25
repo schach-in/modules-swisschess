@@ -14,14 +14,12 @@
 
 
 /**
- * Importiert und synchronisiert Turnierdaten aus einer SWT-Datei
- * in ein vorher angelegtes Turnier
+ * import tournament data from SWT files
  *
  * @param array $vars
- *		int [0]: Jahr
- *		int [1]: Turnierkennung
+ *		int [0]: year
+ *		int [1]: event identifier
  * @return array $page
- * @todo Einzelturniere unterstützen
  */
 function mod_swisschess_make_swtimport($vars, $settings, $event) {
 	if (!$event) return false;
