@@ -336,8 +336,6 @@ function mod_swisschess_make_swtimport_delete($ids, $event_id, $type) {
  * @return array $ids
  */
 function mod_swisschess_make_swtimport_persons($event, $spielerliste, $ids, $import) {
-	wrap_include('zzform/editing', 'custom');
-	wrap_include('persons', 'custom');
 	wrap_include('zzform/batch', 'contacts');
 	
 	$ids['person_spielfrei'] = [];
