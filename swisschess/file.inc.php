@@ -19,7 +19,7 @@
  * @param array $params
  * @return array
  */
-function mf_swisschess_sendfile($params) {
+function mf_swisschess_sendfile_swt($params) {
 	$filename = implode('/', $params);
 	array_shift($params); // folder
 	if (count($params) !== 2) wrap_quit(404);
