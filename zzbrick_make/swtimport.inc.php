@@ -336,9 +336,9 @@ function mod_swisschess_make_swtimport_delete($ids, $event_id, $type) {
  * @return array $ids
  */
 function mod_swisschess_make_swtimport_persons($event, $spielerliste, $ids, $import) {
-	wrap_include_files('zzform/editing', 'custom');
-	wrap_include_files('custom/persons', 'custom');
-	wrap_include_files('zzform/batch', 'contacts');
+	wrap_include('zzform/editing', 'custom');
+	wrap_include('persons', 'custom');
+	wrap_include('zzform/batch', 'contacts');
 	
 	$ids['person_spielfrei'] = [];
 	$ids['person'] = [];
@@ -471,7 +471,7 @@ function mod_swisschess_make_swtimport_persons($event, $spielerliste, $ids, $imp
 			$kennungen['fide-id'] = $spieler[2033];
 			// alte SWT-Versionen konnten keine PKZ speichern
 			$kennungen['pkz'] = !empty($spieler[2034]) ? $spieler[2034] : '';
-			wrap_include_files('zzform/editing', 'ratings');
+			wrap_include('zzform/editing', 'ratings');
 			mf_ratings_contacts_identifiers($contact_id, $kennungen);
 
 			if (!isset($ids['t']['Personen']['successful_insert'])) {

@@ -46,7 +46,7 @@ function mf_swisschess_tournament_type($data) {
  * @return string
  */
 function mf_swisschess_tournament_year($data) {
-	wrap_include_files('validate', 'zzform');
+	wrap_include('validate', 'zzform');
 	$field_names = swtparser_get_field_names('de');
 	$key = array_search('Datum Start', $field_names);
 	$key = zz_check_date($data[$key]);
