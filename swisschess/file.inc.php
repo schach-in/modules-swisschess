@@ -28,6 +28,7 @@ function mf_swisschess_sendfile_swt($params) {
 	$rights = vsprintf('event:%d/%s', $params);
 	if (!wrap_access('swisschess_download', $rights)) wrap_quit(403);
 
+	wrap_include('functions', 'swisschess');
 	$file['send_as'] = mf_swisschess_file_send_as($params);
 	$file['caching'] = false; // never cache swiss chess files
 
