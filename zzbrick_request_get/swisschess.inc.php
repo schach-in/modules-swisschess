@@ -96,13 +96,7 @@ function mod_swisschess_get_swisschess($vars) {
 	}
 	wrap_setting('character_set', 'windows-1252');
 
-	$sql = 'SELECT CONCAT(event, " ", YEAR(date_begin)) AS event
-		FROM events
-		WHERE identifier = "%d/%s"';
-	$sql = sprintf($sql
-		, $vars[0], wrap_db_escape($vars[1])
-	);
-	$data['_filename'] = wrap_db_fetch($sql, '', 'single value');
+	$data['_filename'] = mf_swisschess_file_send_as($vars);
 	$data['_extension'] = 'lst';
 	$data['_query_strings'] = ['alle'];
 	
