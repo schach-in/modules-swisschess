@@ -128,10 +128,10 @@ function mf_swisschess_file_send_as($params) {
 			, events.event, IFNULL(events.event_year, YEAR(events.date_begin)) AS year
 		FROM tournaments
 		LEFT JOIN events USING (event_id)
-		LEFT JOIN tournaments_identifiers USING (tournament_id)
-		WHERE events.identifier = "%d/%s"
-		AND (ISNULL(tournaments_identifiers.identifier_category_id)
-			OR tournaments_identifiers.identifier_category_id = /*_ID categories identifiers/swiss-chess _*/)';
+		LEFT JOIN tournaments_identifiers
+			ON tournaments_identifiers.tournament_id = tournaments.tournament_id
+			AND tournaments_identifiers.identifier_category_id = /*_ID categories identifiers/swiss-chess _*/
+		WHERE events.identifier = "%d/%s"';
 	$sql = sprintf($sql, $params[0], wrap_db_escape($params[1]));
 	$event = wrap_db_fetch($sql);
 	if ($event['identifier']) return $event['identifier'];
