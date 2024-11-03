@@ -33,5 +33,5 @@ function mf_swisschess_sendfile_swt($params) {
 	$file['caching'] = false; // never cache swiss chess files
 
 	$file['name'] = wrap_setting('media_folder').'/'.$filename;
-	return wrap_file_send($file);
+	wrap_send_file($file);
 }
