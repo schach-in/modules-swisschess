@@ -8,15 +8,15 @@
 # @copyright Copyright © 2013, 2014, 2020-2022, 2024 Gustaf Mossakowski
 # @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
 #
-%%% condition if request_delete %%%
+%%% if request_delete %%%
 <p><form method="POST"><input type="submit" value="IDs löschen"></form></p>
 
-%%% condition elseif deletions %%%
+%%% elseif deletions %%%
 <p>Es wurden %%% item deletions %%% Einträge gelöscht. Du kannst jetzt die
 Zuordnungen korrigieren (Fremdschlüssel löschen) und solltest danach die
 neuen Werte in die Datei schreiben.</p>
 
-%%% condition elseif changes %%%
+%%% elseif changes %%%
 <p>Es wurden %%% item changes_team_id "%s Teams" 0 "keine Teams" 1 "1 Team" %%%
  und %%% item changes_person_id "%s Personen" 0 "keine Personen" 1 "1 Person"  %%%
  neu geschrieben. Bitte 
@@ -39,8 +39,8 @@ dies so erfolgen, dass die erste deaktiviert und die zweite neu hinzugefügt wir
 <p>Neue Personen werden bei einem späteren Import in das DSJ-System übernommen.
 Anschließend muss der SWT-Writer erneut ausgeführt werden.</p>
 
-%%% condition else %%%
+%%% else %%%
 <p>Es wurden keine Änderungen an der SWT-Datei vorgenommen. Du brauchst nichts 
 weiter zu machen.</p>
 
-%%% condition endif %%%
+%%% endif %%%
