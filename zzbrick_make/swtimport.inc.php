@@ -8,7 +8,7 @@
  * https://www.zugzwang.org/modules/swisschess
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2012-2024 Gustaf Mossakowski
+ * @copyright Copyright © 2012-2025 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -382,31 +382,26 @@ function mod_swisschess_make_swtimport_persons($event, $spielerliste, $ids, $imp
 			$sql = 'SELECT DISTINCT person_id
 				FROM contacts_identifiers pk
 				LEFT JOIN persons USING (contact_id)
-				WHERE (pk.identifier = "%s" AND identifier_category_id = %d)
-				OR (pk.identifier = "%s" AND identifier_category_id = %d)
-				OR (pk.identifier = "%s-%s" AND identifier_category_id = %d)
-				OR (pk.identifier = "%s-%s" AND identifier_category_id = %d)
-				OR (pk.identifier LIKE "%s-%%" AND identifier_category_id = %d
+				WHERE (pk.identifier = "%s" AND identifier_category_id = /*_ID categories identifiers/pass_dsb _*/)
+				OR (pk.identifier = "%s" AND identifier_category_id = /*_ID categories identifiers/id_fide _*/)
+				OR (pk.identifier = "%s-%s" AND identifier_category_id = /*_ID categories identifiers/pass_dsb _*/)
+				OR (pk.identifier = "%s-%s" AND identifier_category_id = /*_ID categories identifiers/pass_dsb _*/)
+				OR (pk.identifier LIKE "%s-%%" AND identifier_category_id = /*_ID categories identifiers/pass_dsb _*/
 					AND (CONCAT(last_name, ",", first_name) = "%s"
 						OR CONCAT(last_name, ", ", first_name) = "%s")
 					AND (YEAR(date_of_birth) = %d OR ISNULL(date_of_birth)))
 			';
 			$sql = sprintf($sql
 				, !empty($spieler[2034]) ? wrap_db_escape($spieler[2034]) : 0
-				, wrap_category_id('identifiers/pass_dsb')
 				, $spieler[2033] ? $spieler[2033] : 0
-				, wrap_category_id('identifiers/id_fide')
 
 				, $spieler[2010] ? wrap_db_escape($spieler[2010]) : 0
 				, $spieler[2011] ? wrap_db_escape($spieler[2011]) : 0
-				, wrap_category_id('identifiers/pass_dsb')
 
 				, $spieler[2010] ? wrap_db_escape($spieler[2010]) : 0
 				, substr($spieler[2011], 0, 1) === '0' ? wrap_db_escape(substr($spieler[2011], 1)) : 0
-				, wrap_category_id('identifiers/pass_dsb')
 
 				, $spieler[2010] ? wrap_db_escape($spieler[2010]) : 0
-				, wrap_category_id('identifiers/pass_dsb')
 
 				, wrap_db_escape($spieler[2000])
 				, wrap_db_escape($spieler[2000])
