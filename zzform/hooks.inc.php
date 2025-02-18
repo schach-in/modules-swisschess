@@ -8,7 +8,7 @@
  * https://www.zugzwang.org/modules/swisschess
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2014-2024 Gustaf Mossakowski
+ * @copyright Copyright © 2014-2025 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -24,7 +24,7 @@ function mf_swisschess_swtimport($ops) {
 	$url = wrap_path('swisschess_job_swt', $event['identifier'], false);
 	if (!$url) return [];
 	// there might be access restrictions on swtimport URL, therefore use robot username here
-	wrap_setting('log_username', wrap_setting('robot_username'));
+	wrap_setting('log_username', wrap_setting('default_robot_username'));
 	wrap_job($url, ['trigger' => 1, 'job_category_id' => wrap_category_id('jobs/swt')]);
 	return [];
 }
