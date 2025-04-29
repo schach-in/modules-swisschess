@@ -5,7 +5,7 @@
 # https://www.zugzwang.org/modules/swisschess
 #
 # @author Gustaf Mossakowski <gustaf@koenige.org>
-# @copyright Copyright © 2020-2024 Gustaf Mossakowski
+# @copyright Copyright © 2020-2025 Gustaf Mossakowski
 # @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
 #
 msgid ""
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.6\n"
 
 #: zzbrick_make/swtwriter.inc.php zzbrick_request/swtreader.inc.php
 msgid "SWT file `%s` does not exist. Please upload a file first."
@@ -32,5 +32,13 @@ msgid ""
 "This tournament file belongs to a tournament from %d, but the tournament "
 "will take place in %d."
 msgstr ""
-"Diese Turnierdatei gehört zu einem Turnier aus %d, aber das Turnier "
-"findet in %d statt."
+"Diese Turnierdatei gehört zu einem Turnier aus %d, aber das Turnier findet "
+"in %d statt."
+
+#: zzbrick_request_get/swisschess.inc.php
+msgid ""
+"There are only players with unverified eligibility. <a href=\"?"
+"all\">Download unverified players, too</a>"
+msgstr ""
+"Es gibt nur Spieler mit ungeprüfter Spielberechtigung. <a href=\"?"
+"all\">Auch ungeprüfte Spieler herunterladen</a>"

@@ -8,7 +8,7 @@
  * https://www.zugzwang.org/modules/swisschess
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2012-2014, 2016-2017, 2019-2024 Gustaf Mossakowski
+ * @copyright Copyright © 2012-2014, 2016-2017, 2019-2025 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -16,9 +16,6 @@
 function mod_swisschess_get_swisschess($vars) {
 	// Land wurde zugunsten der Gastspielergenehmigung fallen gelassen
 	//		, SUBSTRING(landesverbaende.contact_abbr, 1, 3) AS land
-
-	$where = 'spielberechtigt != "nein"';
-	if (array_key_exists('alle', $_GET)) $where = '(ISNULL(spielberechtigt) OR spielberechtigt != "nein")';
 
 	wrap_db_charset('latin1');
 	// Abfrage Spalte 2, 3: erste Zeile für MM, zweite für EM
@@ -48,6 +45,7 @@ function mod_swisschess_get_swisschess($vars) {
 			, NULL AS teilnehmer_info_2
 			, NULL AS teilnehmer_info_3
 			, CONCAT("person_id=", persons.person_id, IFNULL(CONCAT("&team_id=", team_id), "")) AS teilnehmer_info_4
+			, IF(ISNULL(spielberechtigt), 1, NULL) AS eligibility_unchecked
 		FROM participations
 		LEFT JOIN persons USING (contact_id)
 		LEFT JOIN teams USING (team_id)
@@ -77,7 +75,7 @@ function mod_swisschess_get_swisschess($vars) {
 			ON lv_ok.contact_id = landesverbaende.contact_id
 		WHERE events.identifier = "%d/%s"
 		AND usergroup_id = /*_ID usergroups spieler _*/
-		AND %s
+		AND (ISNULL(spielberechtigt) OR spielberechtigt != "nein")
 		AND (ISNULL(teams.team_id) OR teams.team_status = "Teilnehmer")
 		AND participations.status_category_id IN (
 			/*_ID categories participation-status/subscribed _*/,
@@ -85,20 +83,32 @@ function mod_swisschess_get_swisschess($vars) {
 			/*_ID categories participation-status/participant _*/
 		)
 		ORDER BY team, team_no, rang_no, t_nachname, t_vorname';
-	$sql = sprintf($sql
-		, $vars[0], wrap_db_escape($vars[1])
-		, $where
-	);
+	$sql = sprintf($sql, $vars[0], wrap_db_escape($vars[1]));
 	$data = wrap_db_fetch($sql, 'teilnehmer_info_4');
 	if (!$data) {
 		wrap_db_charset('utf8mb4');
 		return false;
 	}
+	// check if eligibility is unchecked
+	if (!array_key_exists('all', $_GET)) {
+		foreach ($data as $id => $line) {
+			if ($line['eligibility_unchecked']) unset($data[$id]);
+			else unset($data[$id]['eligibility_unchecked']);
+		}
+		if (!$data) {
+			wrap_db_charset('utf8mb4');
+			wrap_setting('error_ignore_404', true); // no need to log this
+			wrap_quit(404, wrap_text('There are only players with unverified eligibility. <a href="?all">Download unverified players, too</a>'));
+		}
+	} else {
+		foreach ($data as $id => $line)
+			unset($data[$id]['eligibility_unchecked']);
+	}
 	wrap_setting('character_set', 'windows-1252');
 
 	$data['_filename'] = mf_swisschess_file_send_as($vars);
 	$data['_extension'] = 'lst';
-	$data['_query_strings'] = ['alle'];
+	$data['_query_strings'] = ['all'];
 	
 	wrap_setting('export_csv_show_empty_cells', true);
 	wrap_setting('export_csv_heading', false);
