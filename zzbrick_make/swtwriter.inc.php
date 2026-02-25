@@ -8,7 +8,7 @@
  * https://www.zugzwang.org/modules/swisschess
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2013-2016, 2019-2024 Gustaf Mossakowski
+ * @copyright Copyright © 2013-2016, 2019-2024, 2026 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -35,7 +35,7 @@ function mod_swisschess_make_swtwriter($vars, $settings, $event) {
 		wrap_error(sprintf('SWT-Import: Falsche Zahl von Parametern: %s', $writer['identifier']));
 		return false;
 	}
-	wrap_setting('logfile_name', $writer['identifier']);
+	wrap_setting('log_filename', $writer['identifier']);
 	
 	// Variante 1: Direkt SWT-Datei auslesen
 	$swt = $event['identifier'].'.swt';

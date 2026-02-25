@@ -8,7 +8,7 @@
  * https://www.zugzwang.org/modules/swisschess
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2012-2025 Gustaf Mossakowski
+ * @copyright Copyright © 2012-2026 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -40,7 +40,7 @@ function mod_swisschess_make_swtimport($vars, $settings, $event) {
 	ignore_user_abort(1);
 	ini_set('max_execution_time', 180);
 	wrap_setting('cache', false);
-	wrap_setting('logfile_name', implode('/', $vars));
+	wrap_setting('log_filename', implode('/', $vars));
 	
 	// @todo Einzel- oder Mannschaftsturnier aus Termine auslesen
 	// Datenherkunft aus Turniere
