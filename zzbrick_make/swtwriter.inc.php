@@ -39,7 +39,7 @@ function mod_swisschess_make_swtwriter($vars, $settings, $event) {
 	
 	// Variante 1: Direkt SWT-Datei auslesen
 	$swt = $event['identifier'].'.swt';
-	$filename = wrap_setting('media_folder').'/swt/'.$swt;
+	$filename = wrap_setting('swisschess_dir').'/'.$swt;
 	if (!file_exists($filename))
 		wrap_quit(404, wrap_text('SWT file `%s` does not exist. Please upload a file first.', ['values' => [$filename]]));
 	
@@ -54,13 +54,13 @@ function mod_swisschess_make_swtwriter($vars, $settings, $event) {
 	}
 
 	if (!is_writable($filename)) {
-		wrap_log(sprintf('Datei swt/%s ist nicht schreibbar', $swt));
+		wrap_log(sprintf('Datei `%s` ist nicht schreibbar', $swt));
 		wrap_setting('error_prefix', '');
 		return false;
 	}
 
     if (!$handle = fopen($filename, "r+b")) {
-		wrap_log(sprintf('Datei swt/%s ist nicht öffenbar', $swt));
+		wrap_log(sprintf('Datei `%s` ist nicht öffenbar', $swt));
 		wrap_setting('error_prefix', '');
 		return false;
     }

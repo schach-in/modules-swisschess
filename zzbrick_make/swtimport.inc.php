@@ -27,9 +27,9 @@ function mod_swisschess_make_swtimport($vars, $settings, $event) {
 	$page['breadcrumbs'][]['title'] = 'SWT-Import';
 	
 	// is there a file?
-	$filename = sprintf('%s/swt/%s.swt', wrap_setting('media_folder'), $event['identifier']);
+	$filename = wrap_setting('swisschess_dir').'/'.$event['identifier'].'.swt';
 	if (!file_exists($filename)) {
-		wrap_error(sprintf('Datei swt/%s.swt existiert nicht', $event['identifier']));
+		wrap_error(sprintf('Datei `%s.swt` existiert nicht', $event['identifier']));
 		wrap_setting('error_prefix', '');
 		$page['text'] = '<p class="error">Die SWT-Datei für dieses Turnier existiert (noch) nicht. Bitte lade erst eine hoch.</p>';
 		$page['error_keep_page'] = true;

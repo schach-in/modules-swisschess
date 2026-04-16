@@ -5,7 +5,7 @@
 # https://www.zugzwang.org/modules/swisschess
 #
 # @author Gustaf Mossakowski <gustaf@koenige.org>
-# @copyright Copyright © 2013, 2014, 2020-2022, 2024 Gustaf Mossakowski
+# @copyright Copyright © 2013, 2014, 2020-2022, 2024-2026 Gustaf Mossakowski
 # @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
 #
 %%% if request_delete %%%
@@ -20,7 +20,7 @@ neuen Werte in die Datei schreiben.</p>
 <p>Es wurden %%% item changes_team_id "%s Teams" 0 "keine Teams" 1 "1 Team" %%%
  und %%% item changes_person_id "%s Personen" 0 "keine Personen" 1 "1 Person"  %%%
  neu geschrieben. Bitte 
-<a href="%%% setting media_internal_path %%%/swt/%%% item identifier %%%.swt">lade die geänderte Datei
+<a href="%%% setting files_path %%%/swisschess/%%% item identifier %%%.swt">lade die geänderte Datei
 herunter</a> und benutze sie für den weiteren Turnierverlauf!</p>
 
 <p>Bei der weiteren Arbeit mit SwissChess unbedingt beachten:</p>

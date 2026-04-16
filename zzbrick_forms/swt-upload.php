@@ -8,7 +8,7 @@
  * https://www.zugzwang.org/modules/swisschess
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2014-2015, 2017, 2019-2024 Gustaf Mossakowski
+ * @copyright Copyright © 2014-2015, 2017, 2019-2026 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -32,21 +32,20 @@ $zz['fields'][22]['field_name'] = 'swt';
 $zz['fields'][22]['dont_show_missing'] = true;
 $zz['fields'][22]['type'] = 'upload_image';
 $zz['fields'][22]['path'] = [
-	'root' => wrap_setting('media_folder').'/swt/',
-	'webroot' => wrap_setting('media_internal_path').'/swt/',
-	'field1' => 'event_identifier', 
-	'string2' => '.swt'
+	'root' => wrap_setting('swisschess_dir').'/',
+	'field' => 'event_identifier', 
+	'string' => '.swt'
 ];
 $zz['fields'][22]['input_filetypes'] = ['swt'];
 $zz['fields'][22]['link'] = [
-	'string1' => wrap_setting('media_internal_path').'/swt/',
-	'field1' => 'event_identifier',
-	'string2' => '.swt'
+	'webroot' => wrap_setting('files_path'),
+	'webstring' => '/swisschess/',
+	'field' => 'event_identifier',
+	'string' => '.swt'
 ];
 $zz['fields'][22]['optional_image'] = true;
 $zz['fields'][22]['image'][0]['title'] = 'gro&szlig;';
 $zz['fields'][22]['image'][0]['field_name'] = 'gross';
-$zz['fields'][22]['image'][0]['path'] = $zz['fields'][22]['path'];
 $zz['fields'][22]['if'][1]['separator'] = 'text <div class="separator">Für Mannschaftsturniere</div>';
 $zz['fields'][22]['if'][2]['separator'] = true;
 $zz['fields'][22]['if']['add']['hide_in_form'] = true;

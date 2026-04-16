@@ -8,7 +8,7 @@
  * https://www.zugzwang.org/modules/swisschess
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2014, 2017, 2019, 2021, 2023-2024 Gustaf Mossakowski
+ * @copyright Copyright © 2014, 2017, 2019, 2021, 2023-2024, 2026 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -23,7 +23,7 @@
  */
 function mod_swisschess_swtreader($params, $settings, $event) {
 	ob_start();
-	$dir = wrap_setting('media_folder').'/swt/'.$params[0].'/';
+	$dir = wrap_setting('swisschess_dir').'/'.$params[0].'/';
 	$filename = $params[1].'.swt';
 	if (!file_exists($dir.$filename))
 		wrap_quit(404, wrap_text('SWT file `%s` does not exist. Please upload a file first.', ['values' => [$dir.$filename]]));
