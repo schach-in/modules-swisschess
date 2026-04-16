@@ -33,15 +33,13 @@ $zz['fields'][22]['dont_show_missing'] = true;
 $zz['fields'][22]['type'] = 'upload_image';
 $zz['fields'][22]['path'] = [
 	'root' => wrap_setting('swisschess_dir').'/',
-	'field' => 'event_identifier', 
+	'field' => 'event_identifier',
 	'string' => '.swt'
 ];
 $zz['fields'][22]['input_filetypes'] = ['swt'];
 $zz['fields'][22]['link'] = [
-	'webroot' => wrap_setting('files_path'),
-	'webstring' => '/swisschess/',
-	'field' => 'event_identifier',
-	'string' => '.swt'
+	'area' => 'swisschess_swtfile',
+	'fields' => ['event_identifier']
 ];
 $zz['fields'][22]['optional_image'] = true;
 $zz['fields'][22]['image'][0]['title'] = 'gro&szlig;';

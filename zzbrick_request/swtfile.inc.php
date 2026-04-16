@@ -2,7 +2,7 @@
 
 /**
  * swisschess module
- * file functions
+ * send an SWT file from data folder
  *
  * Part of »Zugzwang Project«
  * https://www.zugzwang.org/modules/swisschess
@@ -14,12 +14,12 @@
 
 
 /**
- * send an SWT file
+ * send an SWT file from data folder
  *
  * @param array $params
  * @return array
  */
-function mf_swisschess_sendfile_swisschess($params) {
+function mod_swisschess_swtfile($params) {
 	array_shift($params); // folder
 	$filename = implode('/', $params);
 	if (count($params) !== 2) wrap_quit(404);
