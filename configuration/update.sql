@@ -6,7 +6,7 @@
  * https://www.zugzwang.org/modules/swisschess
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2024 Gustaf Mossakowski
+ * @copyright Copyright © 2024, 2026 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -22,3 +22,4 @@
 /* 2024-05-24-10 */	UPDATE tournaments SET urkunde_parameter = REPLACE(urkunde_parameter, 'swisschess[ignore_ids]=1', '&swisschess_ignore_ids=1') WHERE urkunde_parameter LIKE '%swisschess[ignore_ids]=1%';
 /* 2024-05-26-1 */	INSERT INTO categories (`category`, `description`, `main_category_id`, `path`, `parameters`, `sequence`, `last_update`) VALUES ('Swiss-Chess', 'Dateiname für Swiss-Chess-Export', /*_ID categories identifiers _*/, 'identifiers/swiss-chess', "&alias=identifiers/swiss-chess&ournaments_identifier=1", NULL, NOW());
 /* 2024-05-26-2 */	INSERT INTO tournaments_identifiers (tournament_id, identifier, identifier_category_id) SELECT tournament_id, turnierkennung, /*_ID categories identifiers/swiss-chess _*/ FROM tournaments WHERE NOT ISNULL(turnierkennung);
+/* 2026-04-16-1 */	DELETE FROM _settings WHERE setting_key = 'swisschess_job_swt';
