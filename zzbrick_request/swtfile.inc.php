@@ -20,10 +20,8 @@
  * @return array
  */
 function mod_swisschess_swtfile($params) {
-	array_shift($params); // folder
-	$filename = implode('/', $params);
-	if (count($params) !== 2) wrap_quit(404);
-	$params[1] = substr($params[1], 0, strrpos($params[1], '.')); // remove extension
+	if (count($params) !== 2) return false;
+	$filename = implode('/', $params).'.swt';
 
 	$rights = vsprintf('event:%d/%s', $params);
 	if (!wrap_access('swisschess_download', $rights)) wrap_quit(403);
