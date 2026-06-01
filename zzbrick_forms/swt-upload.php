@@ -37,10 +37,11 @@ $zz['fields'][22]['path'] = [
 	'string' => '.swt'
 ];
 $zz['fields'][22]['input_filetypes'] = ['swt'];
-$zz['fields'][22]['link'] = [
+$zz['fields'][22]['path_web'] = [
 	'area' => 'swisschess_swtfile',
 	'fields' => ['event_identifier']
 ];
+$zz['fields'][22]['link'] = $zz['fields'][22]['path_web'];
 $zz['fields'][22]['optional_image'] = true;
 $zz['fields'][22]['image'][0]['title'] = 'gro&szlig;';
 $zz['fields'][22]['image'][0]['field_name'] = 'gross';
