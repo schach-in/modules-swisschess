@@ -44,11 +44,11 @@ function mod_swisschess_make_swtimport($vars, $settings, $event) {
 	
 	// @todo Einzel- oder Mannschaftsturnier aus Termine auslesen
 	// Datenherkunft aus Turniere
-	$sql = 'SELECT tournaments.wertung_spielfrei
+	$sql = 'SELECT tournaments.pairing_bye_scoring
 		FROM tournaments
 		WHERE tournaments.event_id = %d';
 	$sql = sprintf($sql, wrap_db_escape($event['event_id']));
-	$event['wertung_spielfrei'] = wrap_db_fetch($sql, '', 'single value');
+	$event['pairing_bye_scoring'] = wrap_db_fetch($sql, '', 'single value');
 
 	$tournament = mf_swisschess_parse($filename);
 	
@@ -655,7 +655,7 @@ function mod_swisschess_make_swtimport_paarungen($event, $tournament, $ids) {
 				wrap_error(sprintf('Keine Ansetzung für Team %s in Runde %d', $tournament['Teams'][$team_hex_id]['1000'], $runde), E_USER_NOTICE);
 				continue;
 			}
-			if ($event['wertung_spielfrei'] === 'keine') {
+			if ($event['pairing_bye_scoring'] === 'none') {
 				// kein Import von 0:0-Paarungen
 				if ($paarung['Gegner_lang'] === 'spielfrei') continue;
 				if (in_array($ids['team_hex2dec'][$team_hex_id], $ids['team_spielfrei'])) continue;
