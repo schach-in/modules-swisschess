@@ -457,15 +457,15 @@ function mod_swisschess_make_swtimport_persons($event, $spielerliste, $ids, $imp
 			$sql = sprintf($sql, $contact_id);
 			$person_id = wrap_db_fetch($sql, '', 'single value');
 
-			$kennungen = [];
+			$identifiers = [];
 			if ($spieler[2011] AND $spieler[2011] !== '***') {
-				$kennungen['zps'] = $spieler[2010].'-'.sprintf('%03d', $spieler[2011]);
+				$identifiers['pass_dsb'] = $spieler[2010].'-'.sprintf('%03d', $spieler[2011]);
 			}
-			$kennungen['fide-id'] = $spieler[2033];
+			$identifiers['id_fide'] = $spieler[2033];
 			// alte SWT-Versionen konnten keine PKZ speichern
-			$kennungen['pkz'] = !empty($spieler[2034]) ? $spieler[2034] : '';
+			$identifiers['id_dsb'] = !empty($spieler[2034]) ? $spieler[2034] : '';
 			wrap_include('zzform/editing', 'ratings');
-			mf_ratings_contacts_identifiers($contact_id, $kennungen);
+			mf_ratings_contacts_identifiers($contact_id, $identifiers);
 
 			if (!isset($ids['t']['Personen']['successful_insert'])) {
 				$ids['t']['Personen']['successful_insert'] = 0;
