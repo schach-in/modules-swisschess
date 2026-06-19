@@ -1068,7 +1068,8 @@ function mod_swisschess_make_swtimport_verein_zps($zps) {
 		LEFT JOIN contacts_identifiers ok
 			USING (contact_id)
 		WHERE ok.identifier = "%s"
-		AND current = "yes"';
+		AND ok.current = "yes"
+		AND ok.identifier_category_id = /*_ID categories identifiers/pass_dsb _*/';
 	$sql = sprintf($sql, wrap_db_escape($zps));
 	$verein = wrap_db_fetch($sql);
 	if (!$verein) {
@@ -1076,7 +1077,8 @@ function mod_swisschess_make_swtimport_verein_zps($zps) {
 			FROM contacts
 			LEFT JOIN contacts_identifiers ok
 				USING (contact_id)
-			WHERE ok.identifier = "%s"';
+			WHERE ok.identifier = "%s"
+			AND ok.identifier_category_id = /*_ID categories identifiers/pass_dsb _*/';
 		$sql = sprintf($sql, wrap_db_escape($zps));
 		$verein = wrap_db_fetch($sql);
 		if (!$verein) {

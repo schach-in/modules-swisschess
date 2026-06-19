@@ -8,7 +8,7 @@
  * https://www.zugzwang.org/modules/swisschess
  *
  * @author Gustaf Mossakowski <gustaf@koenige.org>
- * @copyright Copyright © 2012-2014, 2016-2017, 2019-2025 Gustaf Mossakowski
+ * @copyright Copyright © 2012-2014, 2016-2017, 2019-2026 Gustaf Mossakowski
  * @license http://opensource.org/licenses/lgpl-3.0.html LGPL-3.0
  */
 
@@ -68,9 +68,11 @@ function mod_swisschess_get_swisschess($vars) {
 		LEFT JOIN contacts_identifiers v_ok
 			ON IFNULL(organisationen.contact_id, participations.club_contact_id) = v_ok.contact_id
 			AND v_ok.current = "yes"
+			AND v_ok.identifier_category_id = /*_ID categories identifiers/pass_dsb _*/
 		LEFT JOIN contacts_identifiers lv_ok
 			ON CONCAT(SUBSTRING(v_ok.identifier, 1, 1), "00") = lv_ok.identifier
 			AND lv_ok.current = "yes"
+			AND lv_ok.identifier_category_id = /*_ID categories identifiers/pass_dsb _*/
 		LEFT JOIN contacts landesverbaende
 			ON lv_ok.contact_id = landesverbaende.contact_id
 		WHERE events.identifier = "%d/%s"
