@@ -382,7 +382,7 @@ function mod_swisschess_make_swtimport_persons($event, $spielerliste, $ids, $imp
 			$sql = 'SELECT DISTINCT person_id
 				FROM contacts_identifiers pk
 				LEFT JOIN persons USING (contact_id)
-				WHERE (pk.identifier = "%s" AND identifier_category_id = /*_ID categories identifiers/pass_dsb _*/)
+				WHERE (pk.identifier = "%s" AND identifier_category_id = /*_ID categories identifiers/id_dsb _*/)
 				OR (pk.identifier = "%s" AND identifier_category_id = /*_ID categories identifiers/id_fide _*/)
 				OR (pk.identifier = "%s-%s" AND identifier_category_id = /*_ID categories identifiers/pass_dsb _*/)
 				OR (pk.identifier = "%s-%s" AND identifier_category_id = /*_ID categories identifiers/pass_dsb _*/)
