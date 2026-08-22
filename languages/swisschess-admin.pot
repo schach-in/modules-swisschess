@@ -1,0 +1,53 @@
+# swisschess module
+# Translations, admin
+#
+# Part of »Zugzwang Project«
+# https://www.zugzwang.org/modules/swisschess
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Zugzwang Project -- swisschess module\n"
+"POT-Creation-Date: 2026-08-22 12:30+0000\n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: configuration/access.cfg:21
+msgid "Debug functions for Swiss Chess, e. g. manual import, deletion of keys etc."
+msgstr ""
+
+#: configuration/access.cfg:29
+msgid "Download swiss chess tournament files (SWT)"
+msgstr ""
+
+#: configuration/access.cfg:34
+msgid "Handle files from Swiss Chess: download .lst"
+msgstr ""
+
+#: configuration/access.cfg:43
+msgid "Handle files from Swiss Chess, upload files"
+msgstr ""
+
+#: configuration/routes.cfg:12
+msgid "Job that imports swiss chess files"
+msgstr ""
+
+#: configuration/routes.cfg:19
+msgid "Download an SWT file from the data folder"
+msgstr ""
+
+#: configuration/settings.cfg:21
+msgid "Ignore IDs that are written into Info_4 field (e. g. because some deleted the teams and created them as new teams etc.)"
+msgstr ""
+
+#: configuration/settings.cfg:26
+msgid "Folder for Swiss-Chess .swt files per tournament"
+msgstr ""
+
+#: configuration/settings.cfg:31
+msgid "Allow to upload SWT files"
+msgstr ""
