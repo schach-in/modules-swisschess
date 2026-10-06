@@ -60,11 +60,11 @@ function mod_swisschess_get_swisschess($vars) {
 		LEFT JOIN contacts_identifiers fide
 			ON persons.contact_id = fide.contact_id
 			AND fide.current = "yes"
-			AND fide.identifier_category_id = /*_ID categories identifiers/id_fide _*/
+			AND fide.identifier_category_id = /*_ID categories identifiers/id-fide _*/
 		LEFT JOIN contacts_identifiers pkz
 			ON persons.contact_id = pkz.contact_id
 			AND pkz.current = "yes"
-			AND pkz.identifier_category_id = /*_ID categories identifiers/id_dsb _*/
+			AND pkz.identifier_category_id = /*_ID categories identifiers/id-nuliga-person _*/
 		LEFT JOIN contacts_identifiers v_ok
 			ON IFNULL(organisationen.contact_id, participations.club_contact_id) = v_ok.contact_id
 			AND v_ok.current = "yes"
