@@ -377,12 +377,14 @@ function mod_swisschess_make_swtimport_persons($event, $spielerliste, $ids, $imp
 				$person_id = wrap_db_fetch($sql, '', 'single value');
 			}
 		}
+		$id2034 = mod_swisschess_make_swtimport_spieler_2034($spieler);
 		if (!$person_id) {
-			// Existiert Person? PKZ 2034 -- FIDE-ID 2033 -- ZPS-Mgl-Nr. 2010-2011
+			// Existiert Person? PKZ/NU 2034 -- FIDE-ID 2033 -- ZPS-Mgl-Nr. 2010-2011
 			$sql = 'SELECT DISTINCT person_id
 				FROM contacts_identifiers pk
 				LEFT JOIN persons USING (contact_id)
 				WHERE (pk.identifier = "%s" AND identifier_category_id = /*_ID categories identifiers/id-dsb _*/)
+				OR (pk.identifier = "%s" AND identifier_category_id = /*_ID categories identifiers/id-nuliga-person _*/)
 				OR (pk.identifier = "%s" AND identifier_category_id = /*_ID categories identifiers/id-fide _*/)
 				OR (pk.identifier = "%s-%s" AND identifier_category_id = /*_ID categories identifiers/pass-dsb _*/)
 				OR (pk.identifier = "%s-%s" AND identifier_category_id = /*_ID categories identifiers/pass-dsb _*/)
@@ -392,7 +394,8 @@ function mod_swisschess_make_swtimport_persons($event, $spielerliste, $ids, $imp
 					AND (YEAR(date_of_birth) = %d OR ISNULL(date_of_birth)))
 			';
 			$sql = sprintf($sql
-				, !empty($spieler[2034]) ? wrap_db_escape($spieler[2034]) : 0
+				, !empty($id2034['pkz']) ? wrap_db_escape($id2034['pkz']) : 0
+				, !empty($id2034['nu']) ? wrap_db_escape($id2034['nu']) : 0
 				, $spieler[2033] ? $spieler[2033] : 0
 
 				, $spieler[2010] ? wrap_db_escape($spieler[2010]) : 0
@@ -462,8 +465,12 @@ function mod_swisschess_make_swtimport_persons($event, $spielerliste, $ids, $imp
 				$identifiers['pass_dsb'] = $spieler[2010].'-'.sprintf('%03d', $spieler[2011]);
 			}
 			$identifiers['id_fide'] = $spieler[2033];
-			// alte SWT-Versionen konnten keine PKZ speichern
-			$identifiers['id_dsb'] = !empty($spieler[2034]) ? $spieler[2034] : '';
+			// alte SWT-Versionen konnten keine PKZ speichern; neu: NU… in 2034
+			if (!empty($id2034['nu'])) {
+				$identifiers['id-nuliga-person'] = $id2034['nu'];
+			} elseif (!empty($id2034['pkz'])) {
+				$identifiers['id_dsb'] = $id2034['pkz'];
+			}
 			wrap_include('zzform/editing', 'ratings');
 			mf_ratings_contacts_identifiers($contact_id, $identifiers);
 
@@ -475,6 +482,29 @@ function mod_swisschess_make_swtimport_persons($event, $spielerliste, $ids, $imp
 		$ids['person'][$s_key] = $person_id;
 	}
 	return $ids;
+}
+
+/**
+ * SWT field 2034: legacy numeric PKZ vs nuLiga person ID (NU…)
+ *
+ * @param array $spieler
+ * @return array pkz, nu (at most one set)
+ */
+function mod_swisschess_make_swtimport_spieler_2034($spieler) {
+	$id2034 = ['pkz' => '', 'nu' => ''];
+	if (empty($spieler[2034])) {
+		return $id2034;
+	}
+	$identifier = trim($spieler[2034]);
+	if ($identifier === '') {
+		return $id2034;
+	}
+	if (str_starts_with($identifier, 'NU')) {
+		$id2034['nu'] = $identifier;
+	} else {
+		$id2034['pkz'] = $identifier;
+	}
+	return $id2034;
 }
 
 /**
